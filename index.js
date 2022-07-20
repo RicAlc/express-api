@@ -2,7 +2,7 @@ const express = require("express");
 const PORT = 3000;
 const app = express();
 
-const notes = [
+let notes = [
   {
     id: 1,
     content: "Fly me to the moon and let me play among the stars...",
@@ -39,6 +39,11 @@ app.get("/api/notes/:id", (req, res) => {
     res.status(404).end();
   }
 });
+app.delete("/api/notes/:id", (req, res) => {
+  const id = Number(req.params.id);
+  notes = notes.filter((note) => id !== note.id);
+  res.status(204).end();
+});
 
 //  http.createServer((req, res) => {
 //   res.writeHead(200, { "Content-Type": "application/json" });
@@ -46,5 +51,5 @@ app.get("/api/notes/:id", (req, res) => {
 // });
 
 app.listen(PORT, () => {
-  console.log(`Server running on por ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
