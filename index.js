@@ -1,6 +1,7 @@
 const express = require("express");
 const PORT = 3000;
 const app = express();
+app.use(express.json());
 
 let notes = [
   {
@@ -39,10 +40,29 @@ app.get("/api/notes/:id", (req, res) => {
     res.status(404).end();
   }
 });
+
 app.delete("/api/notes/:id", (req, res) => {
   const id = Number(req.params.id);
   notes = notes.filter((note) => id !== note.id);
   res.status(204).end();
+});
+
+app.post("/api/notes/", (req, res) => {
+  const note = req.body;
+  console.log(note);
+
+  const ids = notes.map((note) => {
+    return note.id;
+  });
+  const maxId = Math.max(...ids);
+  const newNote = {
+    id: maxId + 1,
+    content: note.content,
+    important: typeof note.important !== "undefined" ? note.important : false,
+    date: new Date().toISOString(),
+  };
+  notes = [...notes, newNote];
+  res.json(newNote);
 });
 
 //  http.createServer((req, res) => {
